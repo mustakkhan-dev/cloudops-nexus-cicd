@@ -32,7 +32,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=${SONAR_AUTH_TOKEN} -Dsonar.host.url=https://sonarcloud.io"
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io"
                 }
             }
         }
