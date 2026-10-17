@@ -1,4 +1,4 @@
-def registry = 'https://mustakkhan-dev.jfrog.io'
+def registry = 'http://10.0.1.22:8082'
 def imageName = 'mustakkhan-dev.jfrog.io/mustak-docker-local/sample_app'
 def version   = '2.1.2'
 pipeline {
