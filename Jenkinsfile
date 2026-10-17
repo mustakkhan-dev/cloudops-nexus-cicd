@@ -1,5 +1,5 @@
 def registry = 'http://10.0.1.22:8082'
-def imageName = 'mustakkhan-dev.jfrog.io/mustak-docker-local/sample_app'
+def imageName = 'mustakkhan/sample_app'
 def version   = '2.1.2'
 pipeline {
     agent {
@@ -86,11 +86,15 @@ pipeline {
         stage("Docker Publish") {
             steps {
                 script {
-                    echo '<--------------- Docker Publish Started --------------->'  
-                    docker.withRegistry(registry, 'jfrog_cred') {
-                        app.push()
-                    }    
-                    echo '<--------------- Docker Publish Ended --------------->'  
+        stage("Docker Publish") {
+            steps {
+                script {
+                    echo '<--------------- Docker Build & Tag Completed --------------->'  
+                    // Image is built locally on the agent ready for EKS deployment!
+                    echo "Docker image built: ${imageName}:${version}"
+                }
+            }
+        }
                 }
             }
         }
