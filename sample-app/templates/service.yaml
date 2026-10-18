@@ -4,10 +4,9 @@ metadata:
   name:  sample-app-service
   namespace: sample-app
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: sample-app
   ports:
-  - nodePort: 30082
-    port: 8000
+  - port: 8000
     targetPort: 8000

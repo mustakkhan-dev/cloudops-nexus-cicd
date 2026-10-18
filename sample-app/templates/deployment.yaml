@@ -13,12 +13,10 @@ spec:
       labels:
         app:  sample-app
     spec:
-      imagePullSecrets:
-      - name: dockercred
       containers:
       - name:  sample-app
-        image: mustakkhan-dev.jfrog.io/mustak-docker-local/sample_app:2.1.2
-        imagePullPolicy: Always
+        image: mustakkhan/sample_app:2.1.2
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         env:
