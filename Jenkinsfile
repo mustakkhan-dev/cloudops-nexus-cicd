@@ -83,15 +83,11 @@ pipeline {
 
         stage("Docker Publish") {
             steps {
-        stage("Docker Publish") {
-            steps {
                 script {
                     echo '<--------------- Docker Build Completed --------------->'  
                     echo "Docker image built and verified: ${imageName}:${version}"
                     echo '<--------------- Docker Build Ready for EKS Deploy --------------->'  
                 }
-            }
-        }
             }
         }
 
