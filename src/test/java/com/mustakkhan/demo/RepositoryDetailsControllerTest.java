@@ -20,6 +20,15 @@ class RepositoryDetailsControllerTest extends AbstractTest {
 
 
 	@Test
+	public void getDashboard() throws Exception {
+		String uri = "/";
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
+				.accept(MediaType.TEXT_HTML_VALUE)).andReturn();
+		int status = mvcResult.getResponse().getStatus();
+		assertEquals(200, status);
+	}
+
+	@Test
 	public void getProductsList() throws Exception {
 		String uri = "/trends?placeid=1&count=5";
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)

@@ -21,7 +21,7 @@ pipeline {
         stage("test") {
             steps {
                 echo "----------- Unit Test Started ----------"
-                sh 'mvn surefire-report:report'
+                sh 'mvn test jacoco:report surefire-report:report'
                 echo "----------- Unit Test Completed ----------"
             }
         }
