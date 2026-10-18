@@ -84,9 +84,16 @@ pipeline {
         stage("Docker Publish") {
             steps {
                 script {
-                    echo '<--------------- Docker Build Completed --------------->'  
-                    echo "Docker image built and verified: ${imageName}:${version}"
-                    echo '<--------------- Docker Build Ready for EKS Deploy --------------->'  
+                    echo '<--------------- Docker Publish to AWS ECR Started --------------->'
+                    sh '''
+                        ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+                        REGION="us-east-1"
+                        ECR_REPO="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/sample_app"
+                        aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin "${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+                        docker tag mustakkhan/sample_app:2.1.2 "${ECR_REPO}:2.1.2"
+                        docker push "${ECR_REPO}:2.1.2"
+                    '''
+                    echo '<--------------- Docker Publish Ended --------------->'  
                 }
             }
         }
@@ -96,6 +103,7 @@ pipeline {
                 script {
                     echo '<--------------- Helm Deploy Started --------------->'
                     sh 'helm upgrade --install sample-app ./sample-app --namespace sample-app --create-namespace'
+                    sh 'kubectl rollout restart deployment/sample-app-dep -n sample-app'
                     echo '<--------------- Helm Deploy Ends --------------->'
                 }
             }

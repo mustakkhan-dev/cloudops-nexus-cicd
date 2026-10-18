@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name:  sample-app
-        image: mustakkhan/sample_app:2.1.2
-        imagePullPolicy: IfNotPresent
+        image: 534344664881.dkr.ecr.us-east-1.amazonaws.com/sample_app:2.1.2
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         env:
