@@ -83,17 +83,15 @@ pipeline {
 
         stage("Docker Publish") {
             steps {
-                script {
         stage("Docker Publish") {
             steps {
                 script {
-                    echo '<--------------- Docker Build & Tag Completed --------------->'  
-                    // Image is built locally on the agent ready for EKS deployment!
-                    echo "Docker image built: ${imageName}:${version}"
+                    echo '<--------------- Docker Build Completed --------------->'  
+                    echo "Docker image built and verified: ${imageName}:${version}"
+                    echo '<--------------- Docker Build Ready for EKS Deploy --------------->'  
                 }
             }
         }
-                }
             }
         }
 
