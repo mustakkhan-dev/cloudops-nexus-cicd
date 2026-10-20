@@ -1,4 +1,4 @@
-def registry = 'http://10.0.1.22:8082'
+def registry = 'http://10.0.1.6:8082'
 def imageName = 'mustakkhan/sample_app'
 def version   = '2.1.2'
 pipeline {
