@@ -75,7 +75,7 @@ public class RepositoryDetailsController {
 			+ "<div class='hero'>"
 			+ "<div class='badge-live'><div class='pulse-dot'></div> Production Release 2.1.2 Live</div>"
 			+ "<h1>CloudOps Nexus CI/CD Pipeline</h1>"
-			+ "<p class='subtitle'>Mustak-to-End Enterprise Automation with Major DevOps Tools</p>"
+			+ "<p class='subtitle'>Annie-to-End Enterprise Automation with Major DevOps Tools</p>"
 			+ "<div class='author-pill'>Architected & Deployed by: <strong>Mustak Khan</strong></div>"
 			+ "<div class='metrics-bar'>"
 			+ "<div class='metric-card'><div class='metric-label'>Orchestrator</div><div class='metric-value'>AWS EKS v1.34</div></div>"
