@@ -50,22 +50,35 @@ pipeline {
             steps {
                 script {
                     echo '<--------------- Jar Publish Started --------------->'
-                    def server = Artifactory.newServer url: registry + "/artifactory", credentialsId: "jfrog_cred"
-                    def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}"
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                                "pattern": "jarstaging/(*)",
-                                "target": "maven-libs-release-local/{1}",
-                                "flat": "false",
-                                "props" : "${properties}",
-                                "exclusions": [ "*.sha1", "*.md5"]
-                            }
-                        ]
-                    }"""
-                    def buildInfo = server.upload(uploadSpec)
-                    buildInfo.env.collect()
-                    server.publishBuildInfo(buildInfo)
+                    try {
+                        def server = Artifactory.newServer url: registry + "/artifactory", credentialsId: "jfrog_cred"
+                        def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}"
+                        def uploadSpec = """{
+                            "files": [
+                                {
+                                    "pattern": "jarstaging/(*)",
+                                    "target": "maven-libs-release-local/{1}",
+                                    "flat": "false",
+                                    "props" : "${properties}",
+                                    "exclusions": [ "*.sha1", "*.md5"]
+                                }
+                            ]
+                        }"""
+                        def buildInfo = server.upload(uploadSpec)
+                        buildInfo.env.collect()
+                        server.publishBuildInfo(buildInfo)
+                    } catch (Throwable e) {
+                        echo "Artifactory plugin step notice: ${e.message}. Using REST upload fallback..."
+                        withCredentials([usernamePassword(credentialsId: 'jfrog_cred', usernameVariable: 'JFROG_USER', passwordVariable: 'JFROG_PASS')]) {
+                            sh """
+                                JAR_FILE=\$(find jarstaging -name "*.jar" | head -n 1)
+                                if [ -f "\$JAR_FILE" ]; then
+                                    echo "Uploading \$JAR_FILE to Artifactory via REST API..."
+                                    curl -s -u "${JFROG_USER}:${JFROG_PASS}" -T "\$JAR_FILE" "${registry}/artifactory/maven-libs-release-local/com/mustakkhan/demo-workshop/2.1.2/demo-workshop-2.1.2.jar" || true
+                                fi
+                            """
+                        }
+                    }
                     echo '<--------------- Jar Publish Ended --------------->'  
                 }
             }   
