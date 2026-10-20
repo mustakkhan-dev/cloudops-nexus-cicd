@@ -98,7 +98,7 @@ public class RepositoryDetailsController {
 			+ "<div class='actions'>"
 			+ "<a href='https://github.com/mustakkhan-dev' target='_blank' class='btn btn-primary'>🐙 GitHub: mustakkhan-dev</a>"
 			+ "<a href='https://www.linkedin.com/in/mustakkhan66/' target='_blank' class='btn btn-primary' style='background: linear-gradient(135deg, #0077b5, #00a0dc);'>💼 LinkedIn: Mustak Khan</a>"
-			+ "<a href='http://a61cbad1de3814a7b819dd6127a133cf-1655324334.us-east-1.elb.amazonaws.com' target='_blank' class='btn btn-secondary'>📊 View Grafana Dashboard</a>"
+			+ "<a href='http://a04bcecd043564b9cbf1f889c6bce90c-1172560680.us-east-1.elb.amazonaws.com' target='_blank' class='btn btn-secondary'>📊 View Grafana Dashboard</a>"
 			+ "<a href='mailto:mkhanmustak06@gmail.com' class='btn btn-secondary'>✉️ Contact Mustak Khan</a>"
 			+ "</div>"
 			+ "<footer>"
