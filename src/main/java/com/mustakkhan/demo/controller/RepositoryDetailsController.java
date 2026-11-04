@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kohsuke.github.GHRepositorySearchBuilder;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,18 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import twitter4j.Trend;
-import twitter4j.Trends;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
-
 @RestController
 public class RepositoryDetailsController {
-
-
-
 
     @Autowired
     private Environment env;
@@ -37,117 +24,191 @@ public class RepositoryDetailsController {
 			+ "<head>"
 			+ "<meta charset='UTF-8'>"
 			+ "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-			+ "<title>CloudOps Nexus | DevOps by Mustak Khan</title>"
+			+ "<title>NexusStore | CloudOps & Developer Gear by Mustak Khan</title>"
 			+ "<style>"
 			+ "* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }"
-			+ "body { background: #0a0f1d; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }"
-			+ ".container { max-width: 1100px; width: 100%; }"
-			+ ".badge-live { display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; }"
+			+ "body { background: #0a0f1d; color: #f1f5f9; min-height: 100vh; padding-bottom: 60px; }"
+			+ "header { background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(148, 163, 184, 0.15); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); padding: 14px 24px; }"
+			+ ".nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }"
+			+ ".logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }"
+			+ ".version-badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }"
+			+ ".search-box { flex: 1; max-width: 450px; background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 8px 16px; color: #f1f5f9; font-size: 14px; outline: none; transition: border-color 0.2s; }"
+			+ ".search-box:focus { border-color: #38bdf8; }"
+			+ ".nav-actions { display: flex; align-items: center; gap: 12px; }"
+			+ ".btn-nav { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s ease; cursor: pointer; }"
+			+ ".btn-grafana { background: #1e293b; color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }"
+			+ ".btn-grafana:hover { background: rgba(245, 158, 11, 0.15); }"
+			+ ".btn-cart { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }"
+			+ ".promo-banner { background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6); color: white; padding: 10px 20px; text-align: center; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }"
+			+ ".container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }"
+			+ ".hero { background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 20px; padding: 36px 30px; margin-bottom: 35px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; overflow: hidden; }"
+			+ ".badge-live { display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 5px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }"
 			+ ".pulse-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }"
 			+ "@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }"
-			+ ".hero { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); margin-bottom: 30px; text-align: center; }"
-			+ "h1 { font-size: 38px; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }"
-			+ ".subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 25px; }"
-			+ ".author-pill { display: inline-block; background: #1e293b; color: #e2e8f0; padding: 8px 18px; border-radius: 12px; border: 1px solid #334155; font-size: 15px; font-weight: 500; margin-bottom: 20px; }"
+			+ "h1 { font-size: 34px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(135deg, #f8fafc, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }"
+			+ ".subtitle { font-size: 16px; color: #94a3b8; margin-bottom: 18px; }"
+			+ ".author-pill { display: inline-block; background: #1e293b; color: #e2e8f0; padding: 6px 16px; border-radius: 10px; border: 1px solid #334155; font-size: 14px; margin-bottom: 20px; }"
 			+ ".author-pill strong { color: #38bdf8; }"
-			+ ".metrics-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 25px; }"
-			+ ".metric-card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 12px; padding: 16px; text-align: left; }"
-			+ ".metric-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }"
-			+ ".metric-value { font-size: 16px; color: #f8fafc; font-weight: 600; margin-top: 4px; }"
-			+ ".section-title { font-size: 22px; font-weight: 700; color: #e2e8f0; margin: 30px 0 15px; text-align: left; display: flex; align-items: center; gap: 10px; }"
-			+ ".grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }"
-			+ ".card { background: #131b2e; border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 14px; padding: 20px; transition: transform 0.2s ease, border-color 0.2s ease; text-align: left; }"
-			+ ".card:hover { transform: translateY(-3px); border-color: #38bdf8; }"
-			+ ".card-icon { font-size: 24px; margin-bottom: 10px; }"
-			+ ".card h3 { font-size: 16px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px; }"
-			+ ".card p { font-size: 13px; color: #94a3b8; line-height: 1.5; }"
-			+ ".actions { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 35px; }"
-			+ ".btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s ease; }"
-			+ ".btn-primary { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3); }"
-			+ ".btn-primary:hover { opacity: 0.95; transform: scale(1.02); }"
-			+ ".btn-secondary { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }"
-			+ ".btn-secondary:hover { background: #334155; }"
-			+ "footer { margin-top: 50px; text-align: center; color: #64748b; font-size: 13px; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 25px; }"
+			+ ".metrics-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }"
+			+ ".metric-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 10px; padding: 12px; text-align: left; }"
+			+ ".metric-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; }"
+			+ ".metric-value { font-size: 14px; color: #f8fafc; font-weight: 600; margin-top: 3px; }"
+			+ ".section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }"
+			+ ".section-title { font-size: 22px; font-weight: 700; color: #e2e8f0; display: flex; align-items: center; gap: 8px; }"
+			+ ".product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }"
+			+ ".product-card { background: #131b2e; border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; position: relative; }"
+			+ ".product-card:hover { transform: translateY(-4px); border-color: #38bdf8; box-shadow: 0 12px 30px rgba(56, 189, 248, 0.15); }"
+			+ ".product-tag { position: absolute; top: 16px; right: 16px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }"
+			+ ".product-icon { font-size: 38px; margin-bottom: 12px; }"
+			+ ".product-title { font-size: 18px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }"
+			+ ".product-desc { font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 16px; flex-grow: 1; }"
+			+ ".product-rating { color: #f59e0b; font-size: 13px; margin-bottom: 14px; display: flex; align-items: center; gap: 5px; }"
+			+ ".product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(148, 163, 184, 0.1); }"
+			+ ".price-tag { font-size: 22px; font-weight: 800; color: #38bdf8; }"
+			+ ".price-original { font-size: 13px; color: #64748b; text-decoration: line-through; margin-left: 6px; }"
+			+ ".btn-add { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }"
+			+ ".btn-add:hover { opacity: 0.92; transform: scale(1.03); }"
+			+ ".toast { position: fixed; bottom: 25px; right: 25px; background: #1e293b; color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); padding: 14px 22px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-weight: 600; font-size: 14px; display: none; z-index: 1000; animation: slideIn 0.3s ease; }"
+			+ "@keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }"
+			+ "footer { margin-top: 60px; text-align: center; color: #64748b; font-size: 13px; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 30px; }"
+			+ ".footer-links { display: flex; justify-content: center; gap: 15px; margin-top: 12px; }"
+			+ ".footer-link { color: #94a3b8; text-decoration: none; font-size: 13px; transition: color 0.2s; }"
+			+ ".footer-link:hover { color: #38bdf8; }"
 			+ "</style>"
 			+ "</head>"
 			+ "<body>"
+			+ "<header>"
+			+ "<div class='nav-container'>"
+			+ "<div style='display:flex; align-items:center; gap:10px;'>"
+			+ "<a href='/' class='logo'>⚡ NexusStore</a>"
+			+ "<span class='version-badge'>E-Commerce v2.2.0</span>"
+			+ "</div>"
+			+ "<input type='text' class='search-box' placeholder='🔍 Search cloud modules, templates, tools...'>"
+			+ "<div class='nav-actions'>"
+			+ "<a href='http://a26ae7e46ac3f4423a4e85d177d42efa-186025007.us-east-1.elb.amazonaws.com' target='_blank' class='btn-nav btn-grafana'>📊 Live Grafana</a>"
+			+ "<button class='btn-nav btn-cart' id='cart-btn'>🛒 Cart (<span id='cart-count'>0</span>)</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "</header>"
+			+ "<div class='promo-banner' id='promo-banner'>"
+			+ "🔥 FLASH SALE: 50% OFF Cloud DevOps Starter Bundles &bull; Live Automated Deployment on Amazon EKS!"
+			+ "</div>"
 			+ "<div class='container'>"
 			+ "<div class='hero'>"
-			+ "<div class='badge-live'><div class='pulse-dot'></div> Production Release 2.1.2 Live</div>"
-			+ "<h1>CloudOps Nexus CI/CD Pipeline</h1>"
-			+ "<p class='subtitle'>End-to-End Enterprise Automation with Major DevOps Tools</p>"
-			+ "<div class='author-pill'>Architected & Deployed by: <strong>Mustak Khan</strong></div>"
+			+ "<div class='badge-live'><div class='pulse-dot'></div> Production Cluster Active • EKS v1.34</div>"
+			+ "<h1>NexusStore &bull; CloudOps &amp; Developer Marketplace</h1>"
+			+ "<p class='subtitle'>Enterprise Cloud Microservice Deployed via End-to-End GitOps Pipeline</p>"
+			+ "<div class='author-pill'>Platform Architect &amp; Lead Engineer: <strong>Mustak Khan</strong></div>"
 			+ "<div class='metrics-bar'>"
-			+ "<div class='metric-card'><div class='metric-label'>Orchestrator</div><div class='metric-value'>AWS EKS v1.34</div></div>"
-			+ "<div class='metric-card'><div class='metric-label'>Deployment Tool</div><div class='metric-value'>Helm 3 Chart</div></div>"
-			+ "<div class='metric-card'><div class='metric-label'>CI Pipeline</div><div class='metric-value'>Jenkins (Master-Agent)</div></div>"
-			+ "<div class='metric-card'><div class='metric-label'>Monitoring</div><div class='metric-value'>Prometheus &amp; Grafana</div></div>"
+			+ "<div class='metric-card'><div class='metric-label'>Cluster Orchestrator</div><div class='metric-value'>AWS EKS v1.34 Managed</div></div>"
+			+ "<div class='metric-card'><div class='metric-label'>Packaging &amp; Rollout</div><div class='metric-value'>Helm 3 Chart Release</div></div>"
+			+ "<div class='metric-card'><div class='metric-label'>CI/CD Engine</div><div class='metric-value'>Jenkins Master-Agent</div></div>"
+			+ "<div class='metric-card'><div class='metric-label'>Observability Stack</div><div class='metric-value'>Prometheus &amp; Grafana</div></div>"
 			+ "</div>"
 			+ "</div>"
-			+ "<div class='section-title'>⚙️ Pipeline Architecture &amp; Tech Stack</div>"
-			+ "<div class='grid'>"
-			+ "<div class='card'><div class='card-icon'>🏗️</div><h3>Terraform</h3><p>VPC, Subnets, Security Groups, EC2 nodes, and S3/DynamoDB state management.</p></div>"
-			+ "<div class='card'><div class='card-icon'>⚡</div><h3>Ansible</h3><p>Automated node provisioning, package installation, and passwordless SSH.</p></div>"
-			+ "<div class='card'><div class='card-icon'>👨‍💻</div><h3>Jenkins Master-Agent</h3><p>Distributed build agent executing Maven, SonarScanner, Docker &amp; Helm stages.</p></div>"
-			+ "<div class='card'><div class='card-icon'>🔍</div><h3>SonarCloud</h3><p>Automated static analysis, code quality gates, and JaCoCo coverage reports.</p></div>"
-			+ "<div class='card'><div class='card-icon'>📦</div><h3>JFrog Artifactory</h3><p>Enterprise artifact repository hosting versioned Java JAR releases.</p></div>"
-			+ "<div class='card'><div class='card-icon'>🐳</div><h3>Docker &amp; AWS ECR</h3><p>Multi-stage container builds using Eclipse Temurin JRE runtime.</p></div>"
-			+ "<div class='card'><div class='card-icon'>☸️</div><h3>Amazon EKS</h3><p>Production Kubernetes managed cluster with auto-scaling worker nodes.</p></div>"
-			+ "<div class='card'><div class='card-icon'>📊</div><h3>Prometheus &amp; Grafana</h3><p>Cluster-wide real-time metric collection, health tracking, and dashboards.</p></div>"
+			+ "<div class='section-header'>"
+			+ "<div class='section-title'>🛍️ Featured Cloud &amp; DevOps Modules</div>"
+			+ "<div style='color:#64748b; font-size:13px;'>Showing 6 verified enterprise packages</div>"
 			+ "</div>"
-			+ "<div class='actions'>"
-			+ "<a href='https://github.com/mustakkhan-dev' target='_blank' class='btn btn-primary'>🐙 GitHub: mustakkhan-dev</a>"
-			+ "<a href='https://www.linkedin.com/in/mustakkhan66/' target='_blank' class='btn btn-primary' style='background: linear-gradient(135deg, #0077b5, #00a0dc);'>💼 LinkedIn: Mustak Khan</a>"
-			+ "<a href='http://a26ae7e46ac3f4423a4e85d177d42efa-186025007.us-east-1.elb.amazonaws.com' target='_blank' class='btn btn-secondary'>📊 View Grafana Dashboard</a>"
-			+ "<a href='mailto:mkhanmustak06@gmail.com' class='btn btn-secondary'>✉️ Contact Mustak Khan</a>"
+			+ "<div class='product-grid'>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>BEST SELLER</span>"
+			+ "<div class='product-icon'>☸️</div>"
+			+ "<h3 class='product-title'>Kubernetes EKS Mastery Suite</h3>"
+			+ "<p class='product-desc'>Production-grade Helm 3 templates, auto-scaling worker node configurations, and zero-downtime rolling update controllers.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐⭐ <span>(5.0 &bull; 142 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$199</span><span class='price-original'>$399</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('Kubernetes EKS Mastery Suite')\">Add to Cart 🛒</button>"
 			+ "</div>"
+			+ "</div>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>ENTERPRISE</span>"
+			+ "<div class='product-icon'>🏗️</div>"
+			+ "<h3 class='product-title'>Terraform AWS Cloud Blueprint</h3>"
+			+ "<p class='product-desc'>Complete declarative infrastructure code for multi-tier VPCs, subnets, S3 remote state locking with DynamoDB, and security groups.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐⭐ <span>(4.9 &bull; 98 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$149</span><span class='price-original'>$299</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('Terraform AWS Blueprint')\">Add to Cart 🛒</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>AUTOMATION</span>"
+			+ "<div class='product-icon'>👨‍💻</div>"
+			+ "<h3 class='product-title'>Jenkins Distributed Pipeline Pro</h3>"
+			+ "<p class='product-desc'>Master-Agent distributed Jenkins pipeline with automated GitHub webhooks, Maven builds, and isolated SSH worker execution.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐☆ <span>(4.8 &bull; 87 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$129</span><span class='price-original'>$249</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('Jenkins Pipeline Pro')\">Add to Cart 🛒</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>SECURITY</span>"
+			+ "<div class='product-icon'>🔍</div>"
+			+ "<h3 class='product-title'>SonarCloud DevSecOps Shield</h3>"
+			+ "<p class='product-desc'>Static application security testing (SAST), automated quality gate policies, and JaCoCo code coverage analyzers.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐⭐ <span>(4.9 &bull; 64 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$89</span><span class='price-original'>$179</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('SonarCloud Shield')\">Add to Cart 🛒</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>MONITORING</span>"
+			+ "<div class='product-icon'>📊</div>"
+			+ "<h3 class='product-title'>Prometheus &amp; Grafana Telemetry</h3>"
+			+ "<p class='product-desc'>Full-cluster monitoring stack with pre-built Grafana visual dashboards, metric scraping exporters, and alert managers.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐⭐ <span>(5.0 &bull; 115 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$119</span><span class='price-original'>$219</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('Prometheus Telemetry Hub')\">Add to Cart 🛒</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "<div class='product-card'>"
+			+ "<span class='product-tag'>REGISTRY</span>"
+			+ "<div class='product-icon'>📦</div>"
+			+ "<h3 class='product-title'>JFrog Artifactory &amp; ECR Vault</h3>"
+			+ "<p class='product-desc'>Versioned binary repository management for Maven JARs and multi-stage container images on Amazon Elastic Container Registry.</p>"
+			+ "<div class='product-rating'>⭐⭐⭐⭐☆ <span>(4.7 &bull; 53 reviews)</span></div>"
+			+ "<div class='product-footer'>"
+			+ "<div><span class='price-tag'>$79</span><span class='price-original'>$159</span></div>"
+			+ "<button class='btn-add' onclick=\"addToCart('JFrog Artifactory Vault')\">Add to Cart 🛒</button>"
+			+ "</div>"
+			+ "</div>"
+			+ "</div>"
+			+ "<div id='toast' class='toast'>Item added to cart!</div>"
 			+ "<footer>"
-			+ "<p>&copy; 2026 Advanced CI/CD DevOps Project &bull; Created with pride by <strong>Mustak Khan</strong></p>"
+			+ "<p>&copy; 2026 NexusStore &bull; Advanced CI/CD E-Commerce Application</p>"
+			+ "<p style='margin-top:5px;'>Architected and Deployed with pride by <strong>Mustak Khan</strong></p>"
+			+ "<div class='footer-links'>"
+			+ "<a href='https://github.com/mustakkhan-dev' target='_blank' class='footer-link'>🐙 GitHub: mustakkhan-dev</a>"
+			+ "<a href='https://www.linkedin.com/in/mustakkhan66/' target='_blank' class='footer-link'>💼 LinkedIn: Mustak Khan</a>"
+			+ "<a href='http://a26ae7e46ac3f4423a4e85d177d42efa-186025007.us-east-1.elb.amazonaws.com' target='_blank' class='footer-link'>📊 Live Grafana Telemetry</a>"
+			+ "<a href='mailto:mkhanmustak06@gmail.com' class='footer-link'>✉️ Contact</a>"
+			+ "</div>"
 			+ "</footer>"
 			+ "</div>"
+			+ "<script>"
+			+ "let cartCount = 0;"
+			+ "function addToCart(product) {"
+			+ "  cartCount++;"
+			+ "  document.getElementById('cart-count').innerText = cartCount;"
+			+ "  const toast = document.getElementById('toast');"
+			+ "  toast.innerText = '🛒 Added ' + product + ' to Cart! (Total: ' + cartCount + ')';"
+			+ "  toast.style.display = 'block';"
+			+ "  setTimeout(() => { toast.style.display = 'none'; }, 2500);"
+			+ "}"
+			+ "</script>"
 			+ "</body>"
 			+ "</html>";
 	}
 
 	@GetMapping("/trends")
 	public Map<String, String> getTwitterTrends(@RequestParam("placeid") String trendPlace, @RequestParam("count") String trendCount) {
-		String consumerKey = env.getProperty("CONSUMER_KEY");
-		String consumerSecret = env.getProperty("CONSUMER_SECRET");
-		String accessToken = env.getProperty("ACCESS_TOKEN");
-		String accessTokenSecret = env.getProperty("ACCESS_TOKEN_SECRET");
-		System.out.println("consumerKey "+consumerKey+" consumerSecret "+consumerSecret+" accessToken "+accessToken+" accessTokenSecret "+accessTokenSecret);		
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true)
-		        .setOAuthConsumerKey(consumerKey)
-				.setOAuthConsumerSecret(consumerSecret)
-				.setOAuthAccessToken(accessToken)
-				.setOAuthAccessTokenSecret(accessTokenSecret);
-		TwitterFactory tf = new TwitterFactory(cb.build());
-		System.out.println("Twitter Factory "+tf);
-		System.out.println("Code testing purpose ");
-		Twitter twitter = tf.getInstance();
-		System.out.println("Twitter object "+twitter);
 		Map<String, String> trendDetails = new HashMap<String, String>();
-		try {
-			Trends trends = twitter.getPlaceTrends(Integer.parseInt(trendPlace));
-			System.out.println("After API call");
-			int count = 0;
-			for (Trend trend : trends.getTrends()) {
-				if (count < Integer.parseInt(trendCount)) {
-					trendDetails.put(trend.getName(), trend.getURL());
-					count++;
-				}
-			}
-		} catch (TwitterException e) {
-			trendDetails.put("test", "MyTweet");
-            //trendDetails.put("Twitter Exception", e.getMessage());
-			System.out.println("Twitter exception "+e.getMessage());
-
-		}catch (Exception e) {
-			trendDetails.put("test", "MyTweet");
-            System.out.println("Exception "+e.getMessage());
-		}
+		trendDetails.put("status", "operational");
 		return trendDetails;
 	}
-
 }
