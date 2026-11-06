@@ -197,7 +197,7 @@ public class RepositoryDetailsController {
 			+ "<a href='/' class='brand-title'>tas<span>mo</span></a>"
 			+ "<div class='delivery-info' onclick=\"alert('Delivery Node: ip-192-168-5-251 (Amazon EKS us-east-1)')\">"
 			+ "<div class='delivery-time'>Delivery in 10 minutes</div>"
-			+ "<div class='delivery-location'>Ramachandrapur, Jatni, Bhuban... &#9662;</div>"
+			+ "<div class='delivery-location'>Ramachandrapur, Jatni, Bhubaneswar &#9662;</div>"
 			+ "</div>"
 			+ "</div>"
 			+ "<div class='search-wrap'>"
