@@ -1,4 +1,4 @@
-# 🚀 Implementation of the Entire Advanced CI/CD Pipeline with Major DevOps Tools
+# Implementation of the Entire Advanced CI/CD Pipeline with Major DevOps Tools 🚀
 
 ![DevOps Pipeline](https://imgur.com/WcCpKVU.png)
 
