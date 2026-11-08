@@ -127,7 +127,7 @@ A comprehensive end-to-end CI/CD pipeline leveraging **Terraform**, **Ansible**,
 
 ---
 
-## 👨‍💻 Author & Maintainer
+## 👨‍💻 Author & Maintainer:
 
 This project is created and maintained by **[Mustak Khan](https://github.com/mustakkhan-dev)** 🚀
 
